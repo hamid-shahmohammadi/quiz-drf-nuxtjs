@@ -1,0 +1,14 @@
+django-admin startproject core .
+py manage.py startapp quiz
+pip install djangorestframework
+pip freeze > requirements.txt
+py manage.py migrate
+py manage.py createsuperuser
+py manage.py makemigrations
+py manage.py migrate
+py manage.py runserver
+--------------
+admin
+123456
+------------
+https://github.com/veryacademy/YT-Django-API-Quiz-Part1
