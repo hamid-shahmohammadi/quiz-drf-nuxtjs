@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'quiz',
     'rest_framework',
     "corsheaders",
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -79,8 +80,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'drf_quiz',
+        'USER':'root',
+        'PASSWORD':'',
     }
 }
 
@@ -129,3 +132,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+CORS_ALLOW_CREDENTIALS=True
+
+AUTH_USER_MODEL = 'users.User'
