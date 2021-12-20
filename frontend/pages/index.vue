@@ -1,6 +1,6 @@
 <template>
   <div class="container queez-list">
-    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div v-if="quiz" class="row row-cols-1 row-cols-md-3 mb-3 text-center">
 
       <div class="col" v-for="q in quiz" :key="q.id">
         <div class="card mb-4 rounded-3 shadow-sm">
@@ -26,11 +26,46 @@
 
 <script>
 export default {
+  middleware: 'auth',
   async asyncData({ $axios }) {
-  const quiz = await $axios.$get('http://127.0.0.1:8000/quiz')
-  console.log(quiz)
-  return { quiz }
-}
+
+    const response=await fetch('http://localhost:8000/quiz',{ 
+        method:'GET',    
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+    });
+
+    const quiz = await response.json();
+    
+
+    // const quiz = await $axios.$get('http://127.0.0.1:8000/quiz',{ withCredentials: true })
+    console.log(quiz)
+    return { quiz }
+  },
+  async mounted(){
+    try{
+    const response=await fetch('http://localhost:8000/users/user',{ 
+        method:'GET',    
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+    });
+    const context = await response.json();
+    console.log(context);
+    this.saveUser(context)
+    this.message= "Hi " + context.name;
+    this.$nuxt.$emit('auth',true);
+    }
+    catch(e){
+      this.message= "you are not log in";
+      console.log(e);
+       this.$nuxt.$emit('auth',false);
+    }
+  },
+  methods:{
+    saveUser(user){
+      this.$store.dispatch('storeUser', user)
+    }
+  }
  
 }
 </script>
