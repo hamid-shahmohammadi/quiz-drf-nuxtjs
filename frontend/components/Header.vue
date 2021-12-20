@@ -21,6 +21,7 @@
                      <li v-if="!$store.getters['getLoggedIn']" class="nav-item">
                         <NuxtLink to="/register" class="nav-link active" aria-current="page" href="#">Register</NuxtLink>
                     </li>
+                  
                     <li v-if="$store.getters['getLoggedIn']" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#" @click="logout">Logout</a>
                     </li>
@@ -35,8 +36,16 @@
 </template>
 
 <script>
-export default {
-     methods:{
+export default { 
+    data(){
+        return {
+            auth:false
+        }
+    }, 
+    asyncData(){
+        
+    },
+    methods:{
       async logout(){
          await fetch('http://localhost:8000/users/logout',{
                 method:'POST',
@@ -44,11 +53,20 @@ export default {
                 credentials:'include',
                
           });
-          this.$nuxt.$emit('auth',false);
-          await this.$router.push('/login');
-      }
-    }
-
+         
+          this.removeUser()
+         
+          
+          
+      },
+      saveUser(user){
+        this.$store.dispatch('storeUser', user)
+      },
+      removeUser(){
+          this.$store.dispatch('removeUser')
+          this.$router.push('/login');
+      },
+    },
 }
 </script>
 

@@ -8,11 +8,24 @@ export const state = () => ({
     STORE_JWT(state, jwt) {
       state.jwt = jwt
       state.loggedIn=true
+      localStorage.setItem("loggedIn",true)
+      
     },
     STORE_USER(state,user){
         state.user=user
         state.loggedIn=true
+        localStorage.setItem("loggedIn",true)
+        
+        localStorage.setItem("user",user)
+        
 
+    },
+    REMOVE_USER(state){
+        state.user=null
+        state.loggedIn=false
+        state.jwt=''
+        localStorage.setItem("loggedIn",false)
+        localStorage.setItem("user",null)
     }
   }
   
@@ -22,7 +35,11 @@ export const state = () => ({
     },
     storeUser({commit},user){
         commit('STORE_USER',user)
-    }
+    },
+    removeUser({commit}){
+        commit('REMOVE_USER')
+    },
+
   }
   
   export const getters = {

@@ -26,6 +26,7 @@
 
 <script>
 export default {
+  middleware: 'guest',
   data(){
         return{ 
             email:'',
@@ -53,6 +54,9 @@ export default {
         saveJwt(jwt){
           this.$store.dispatch('storeJWT', jwt)
         }
+    },
+    mounted(){
+      
     }
 }
 </script>
