@@ -4,10 +4,12 @@ from .models import Quizzes, Question
 from .serializers import QuizSerializer, RandomQuestionSerializer, QuestionSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from .paginations import CustomPagination
 
 class Quiz(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = QuizSerializer
+    pagination_class = CustomPagination
     queryset = Quizzes.objects.all()
 
 class RandomQuestion(APIView):

@@ -16,7 +16,7 @@ export default {
     ],
     script: [
       {
-        src: "js/bootstrap.bundle.min.js",
+        src: "http://localhost:3000/js/bootstrap.bundle.min.js",
       },
     ],
   },

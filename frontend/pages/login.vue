@@ -17,7 +17,12 @@
             <div class="checkbox mb-3">
             
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <button :disabled="loading" class="w-100 btn btn-lg btn-primary" type="submit">
+              <div v-if="loading" class="spinner-grow spinner-grow-sm" role="status">
+                
+              </div>
+              Sign in
+              </button>
            
         </form>
         </main>
@@ -30,12 +35,13 @@ export default {
   data(){
         return{ 
             email:'',
-            password:''
+            password:'',
+            loading:false
         }
     },
     methods:{
         async login(){
-          
+            this.loading=true
 
             const data = { 'email': this.email, 'password': this.password }
             console.log(data);
@@ -49,12 +55,11 @@ export default {
             } catch(e) {
                 console.log(e.message)
             }
+            this.loading=false
 
            
         },
-        saveJwt(jwt){
-          this.$store.dispatch('storeJWT', jwt)
-        }
+       
     },
     mounted(){
       
