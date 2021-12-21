@@ -15,14 +15,14 @@
                 
                 </ul>
                 <ul class="navbar-nav mb-2 mb-md-0">
-                    <li v-if="!$store.getters['getLoggedIn']" class="nav-item">
+                    <li v-if="!this.$auth.loggedIn" class="nav-item">
                         <NuxtLink to="/login" class="nav-link active" aria-current="page" href="#">Login</NuxtLink>
                     </li>
-                     <li v-if="!$store.getters['getLoggedIn']" class="nav-item">
+                     <li v-if="!this.$auth.loggedIn" class="nav-item">
                         <NuxtLink to="/register" class="nav-link active" aria-current="page" href="#">Register</NuxtLink>
                     </li>
                   
-                    <li v-if="$store.getters['getLoggedIn']" class="nav-item">
+                    <li v-if="this.$auth.loggedIn" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#" @click="logout">Logout</a>
                     </li>
                 
@@ -37,35 +37,12 @@
 
 <script>
 export default { 
-    data(){
-        return {
-            auth:false
-        }
-    }, 
-    asyncData(){
-        
-    },
+    
     methods:{
       async logout(){
-         await fetch('http://localhost:8000/users/logout',{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                credentials:'include',
-               
-          });
-         
-          this.removeUser()
-         
-          
-          
+          await this.$auth.logout()    
       },
-      saveUser(user){
-        this.$store.dispatch('storeUser', user)
-      },
-      removeUser(){
-          this.$store.dispatch('removeUser')
-          this.$router.push('/login');
-      },
+      
     },
 }
 </script>

@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  middleware: 'guest',
+  
   data(){
         return{ 
             email:'',
@@ -35,20 +35,35 @@ export default {
     },
     methods:{
         async login(){
-            var response=await fetch('http://localhost:8000/users/login',{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                credentials:'include',
-                body:JSON.stringify({   
-                    email:this.email,
-                    password:this.password
-                })
-            });
-            var data=await response.json()
-            console.log(data.jwt)
-            this.saveJwt(data.jwt)
+            // var response=await fetch('http://localhost:8000/users/login',{
+            //     method:'POST',
+            //     headers:{'Content-Type':'application/json'},
+            //     credentials:'include',
+            //     body:JSON.stringify({   
+            //         email:this.email,
+            //         password:this.password
+            //     })
+            // });
+            // var data=await response.json()
+            // console.log(data.jwt)
+            // this.saveJwt(data.jwt)
+            // this.$auth.setUser(data.user)
             
-            await this.$router.push('/');
+            // await this.$router.push('/');
+
+            const data = { 'email': this.email, 'password': this.password }
+            console.log(data);
+            try{
+                const response = await this.$auth.loginWith('local', { data: data})
+                console.log(response)
+                this.$auth.$storage.setUniversal('email', response.data.email)
+                await this.$auth.setUserToken(response.data.access_token, response.data.refresh_token)
+
+                await this.$router.push('/');
+            } catch(e) {
+                console.log(e.message)
+            }
+
            
         },
         saveJwt(jwt){

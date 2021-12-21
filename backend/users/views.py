@@ -6,6 +6,13 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
 from .models import User
 import jwt,datetime
+from rest_framework.decorators import api_view
+from django.contrib.auth import get_user_model
+from rest_framework import exceptions
+from rest_framework.reverse import reverse
+import requests
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 
@@ -17,12 +24,37 @@ class RegisterView(APIView):
         return Response(serializer.data)
 
 
+@api_view(['POST'])
+def login(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    
+    user = get_user_model().objects.filter(email=email).first()
+    if user is None:
+        raise exceptions.AuthenticationFailed('User not found!')
+    if not user.check_password(password):
+        raise exceptions.AuthenticationFailed('Incorrect Password!')
+    
+    response = Response()
+    
+    token_endpoint = reverse(viewname='token_obtain_pair', request=request)
+    tokens = requests.post(token_endpoint, data=request.data).json()
+    
+    response.data = {
+        'access_token': tokens.get('access'),
+        'refresh_token': tokens.get('refresh'),
+        'email': user.email
+    }
+    
+    return response
+
 class LoginView(APIView):
     def post(self,request):
         email = request.data['email']
         password = request.data['password']
 
         user=User.objects.filter(email=email).first()
+        serializer = UserSerializer(user)
 
         if user is None:
             raise AuthenticationFailed('user not found!')
@@ -42,7 +74,8 @@ class LoginView(APIView):
 
         response.set_cookie(key='jwt',value=token,httponly=True)
         response.data={
-            'jwt':token
+            # 'jwt':token,
+            'user':serializer.data
         }    
 
         return response
@@ -72,5 +105,15 @@ class LogoutView(APIView):
         response.data  = {
             'message':'success'
         } 
-        return response         
+        return response  
+
+class CurrentLoggedInUser(ModelViewSet):
+    queryset = get_user_model().objects.all()
+    permission_classes = (IsAuthenticated, )
+    serializer_class = UserSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        user_profile = self.queryset.get(email=request.user.email)
+        serializer = self.get_serializer(user_profile)
+        return Response({'user': serializer.data})                 
 

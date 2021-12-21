@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from .models import Quizzes, Question
 from .serializers import QuizSerializer, RandomQuestionSerializer, QuestionSerializer
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 class Quiz(generics.ListAPIView):
-
+    permission_classes = (IsAuthenticated, )
     serializer_class = QuizSerializer
     queryset = Quizzes.objects.all()
 
