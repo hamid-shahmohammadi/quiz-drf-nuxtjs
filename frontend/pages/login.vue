@@ -35,21 +35,7 @@ export default {
     },
     methods:{
         async login(){
-            // var response=await fetch('http://localhost:8000/users/login',{
-            //     method:'POST',
-            //     headers:{'Content-Type':'application/json'},
-            //     credentials:'include',
-            //     body:JSON.stringify({   
-            //         email:this.email,
-            //         password:this.password
-            //     })
-            // });
-            // var data=await response.json()
-            // console.log(data.jwt)
-            // this.saveJwt(data.jwt)
-            // this.$auth.setUser(data.user)
-            
-            // await this.$router.push('/');
+          
 
             const data = { 'email': this.email, 'password': this.password }
             console.log(data);
