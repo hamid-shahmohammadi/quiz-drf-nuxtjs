@@ -68,8 +68,6 @@ export default {
       this.previousPage=res.previous.slice(22)
     }
     this.quiz=res.results
-    
-    
   },
   methods:{
     async nextLink(){
