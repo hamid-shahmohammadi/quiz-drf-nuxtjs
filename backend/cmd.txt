@@ -10,7 +10,3 @@ py manage.py runserver
 --------------
 admin
 123456
-------------
-https://github.com/veryacademy/YT-Django-API-Quiz-Part1
--------------
-30
